@@ -108,6 +108,15 @@ strong { color: #fff; font-weight: 600; }
   filter: brightness(0.5) saturate(0.9);
   z-index: 0;
 }
+
+/* 竖屏（手机/平板竖持）：切换为竖向裁切的背景图 */
+@media (orientation: portrait) {
+  .hero-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255, 61, 90, 0.16), transparent 60%),
+      url("assets/hero-mobile.webp") center / cover no-repeat;
+  }
+}
 .hero-bg::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(10,12,18,0.35) 0%, rgba(10,12,18,0.72) 55%, var(--bg) 100%);
