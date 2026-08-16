@@ -14,7 +14,7 @@
   <!-- 导航 -->
   <header class="nav" id="nav">
     <div class="nav-inner">
-      <a class="brand" href="#top">何杨<span class="brand-dot">.</span></a>
+      <a class="brand" href="#top">HY<span class="brand-dot">.</span></a>
       <nav class="nav-links" id="nav-links">
         <a href="#about">关于</a>
         <a href="#skills">技能</a>
@@ -36,15 +36,14 @@
       <p class="hero-eyebrow reveal">信息安全 · 后端开发 · AI 应用</p>
       <h1 class="hero-name reveal">何杨</h1>
       <p class="hero-tagline reveal">
-        北京科技大学信息安全专业学生，热衷把想法做成能跑的产品——<br class="br-desktop" />
-        从 Web 权限系统，到带 Live2D 的 AI 桌宠。
+        北京科技大学信息安全专业学生，独立打造了一款<br class="br-desktop" />
+        会日语、有 Live2D 表情、能记住你的本地 AI 桌宠。
       </p>
       <div class="hero-actions reveal">
         <a class="btn btn-primary" href="#projects">查看项目</a>
         <a class="btn btn-ghost" href="#contact">联系我</a>
       </div>
       <div class="hero-meta reveal">
-        <span class="chip"><i class="dot"></i>可实习 6 个月以上</span>
         <span class="chip">北京科技大学</span>
         <span class="chip">信息安全</span>
       </div>
@@ -65,7 +64,7 @@
           </p>
           <p>
             代表作 <strong>SHINKU</strong> 是一个从零搭起来的本地 AI 桌宠——从 Electron 桌面壳、Live2D 表情，到
-            DeepSeek 对话大脑与 GPT-SoVITS 语音，都是我独立完成的。目前可实习 6 个月以上，希望在真实项目中继续成长。
+            DeepSeek 对话大脑与 GPT-SoVITS 语音，都是我独立完成的。希望在真实项目中继续成长。
           </p>
         </div>
         <div class="about-cards reveal">
@@ -107,9 +106,7 @@
         <div class="skill-group reveal">
           <h3>Web & 后端</h3>
           <div class="tag-list">
-            <span class="tag">Flask</span>
             <span class="tag">FastAPI</span>
-            <span class="tag">MySQL</span>
             <span class="tag">REST API</span>
           </div>
         </div>
@@ -180,38 +177,35 @@
             <span class="tag">sherpa-onnx</span>
             <span class="tag">SQLite + LanceDB</span>
           </div>
-          <div class="gallery">
-            <figure class="gallery-item"><img src="assets/shinku-1.webp" alt="SHINKU 桌宠界面 1" loading="lazy" /><figcaption>桌宠主界面</figcaption></figure>
-            <figure class="gallery-item"><img src="assets/shinku-2.webp" alt="SHINKU 桌宠界面 2" loading="lazy" /><figcaption>互动展示</figcaption></figure>
-            <figure class="gallery-item"><img src="assets/shinku-3.webp" alt="SHINKU 桌宠界面 3" loading="lazy" /><figcaption>功能展示</figcaption></figure>
+          <div class="demo-section">
+            <h4 class="demo-title">功能演示</h4>
+            <div class="demo-grid">
+              <figure class="demo-item">
+                <video controls preload="none" poster="videos/interact-poster.jpg" playsinline>
+                  <source src="videos/interact.mp4" type="video/mp4" />
+                  你的浏览器不支持视频播放。
+                </video>
+                <figcaption><strong>点击互动</strong><span>点按桌宠触发表情与动作</span></figcaption>
+              </figure>
+              <figure class="demo-item">
+                <video controls preload="none" poster="videos/dialogue-poster.jpg" playsinline>
+                  <source src="videos/dialogue.mp4" type="video/mp4" />
+                  你的浏览器不支持视频播放。
+                </video>
+                <figcaption><strong>语音对话</strong><span>与真红对话，日文原文 + 中文译文</span></figcaption>
+              </figure>
+              <figure class="demo-item">
+                <video controls preload="none" poster="videos/settings-poster.jpg" playsinline>
+                  <source src="videos/settings.mp4" type="video/mp4" />
+                  你的浏览器不支持视频播放。
+                </video>
+                <figcaption><strong>设置与切换角色</strong><span>设置窗口、麦克风开关、角色切换</span></figcaption>
+              </figure>
+            </div>
           </div>
         </div>
       </article>
 
-      <!-- RBAC -->
-      <article class="project reveal">
-        <div class="project-head">
-          <div>
-            <h3 class="project-name">RBAC 角色权限管理系统</h3>
-            <p class="project-sub">基于角色的访问控制 Web 系统 · 2026.05 – 2026.06</p>
-          </div>
-        </div>
-        <div class="project-body">
-          <p>
-            现代企业 Web 系统对多角色、多权限的复杂访问控制需求日益增长。本项目基于业界成熟的 RBAC 模型，
-            通过「用户—角色—权限」的解耦关系，实现灵活、高效的权限分配。
-          </p>
-          <ul class="feature-list">
-            <li><strong>用户管理</strong>：统计用户数量，新增用户、分配权限、删除用户</li>
-            <li><strong>安全措施</strong>：防止用户权限混乱与超级管理员权限丢失</li>
-          </ul>
-          <div class="tag-list">
-            <span class="tag">Python</span>
-            <span class="tag">Flask</span>
-            <span class="tag">MySQL</span>
-          </div>
-        </div>
-      </article>
     </div>
   </section>
 
@@ -262,7 +256,7 @@
     <div class="wrap">
       <h2 class="section-title reveal">联系我</h2>
       <p class="section-sub reveal">Contact</p>
-      <p class="contact-lead reveal">期待与您交流，实习可立即到岗，实习时长 6 个月以上。</p>
+      <p class="contact-lead reveal">期待与您交流。</p>
       <div class="contact-grid">
         <a class="contact-card reveal" href="tel:15528599252">
           <span class="contact-icon">📞</span>
@@ -272,10 +266,6 @@
           <span class="contact-icon">✉️</span>
           <div><h3>邮箱</h3><p>812995579@qq.com</p></div>
         </a>
-        <div class="contact-card reveal">
-          <span class="contact-icon">🕐</span>
-          <div><h3>可实习时间</h3><p>6 个月以上</p></div>
-        </div>
       </div>
     </div>
   </section>
