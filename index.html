@@ -158,16 +158,128 @@
         </div>
         <div class="project-body">
           <p>
-            SHINKU 是一款 Electron 桌面 AI 桌宠应用，角色是二阶堂真红（Shinku）。透明无边框悬浮窗让 Live2D
-            角色直接「站」在桌面上——点按互动、长按拖动、右键退出；聊天回复为日文原文 + 中文译文；
-            独立设置窗口管理麦克风、按住说话等开关。前后端全部在本机运行。
+            SHINKU 是一款从零搭建的 Electron 桌面 AI 桌宠，角色是「二阶堂真红」（Shinku）。透明无边框悬浮窗让
+            Live2D 角色直接「站」在桌面上；她能<strong>用日语对话、随情绪做出动作与表情、并长期记住关于你的事</strong>。
+            它把「角色人格」「长期记忆」「语音音色」「Live2D 表情」四个维度的还原做到了一处，前后端与 AI 服务全部在本机运行，数据不出本机。
           </p>
+
+          <!-- 架构 -->
+          <h4 class="block-title">技术架构</h4>
+          <div class="arch-grid">
+            <div class="arch-card">
+              <h5>Electron 主进程</h5>
+              <p>窗口 / 托盘 / 全局快捷键、长按拖拽、贴边吸附、鼠标穿透、sherpa-onnx 本地 ASR，并负责拉起与守护后端进程。</p>
+            </div>
+            <div class="arch-card">
+              <h5>FastAPI Sidecar</h5>
+              <p>角色管理、LLM 对话（同步 + SSE 流式）、记忆、TTS 调度、翻译，监听 127.0.0.1 动态端口。</p>
+            </div>
+            <div class="arch-card">
+              <h5>渲染层</h5>
+              <p>三个透明置顶窗口：Live2D 宠物主窗、聊天窗、设置窗，经 preload 白名单 IPC 与主进程通信。</p>
+            </div>
+            <div class="arch-card">
+              <h5>外部服务</h5>
+              <p>DeepSeek（对话大脑）· GPT-SoVITS（音色克隆）· 本地 bge-small-zh（向量化），均可离线运行。</p>
+            </div>
+          </div>
+
+          <h4 class="block-title">一次对话的完整链路</h4>
+          <ol class="flow-list">
+            <li><strong>组装</strong>：加载角色人设 + 检索知识库 / 记忆 / 画像，编译 system prompt + few-shot。</li>
+            <li><strong>生成</strong>：DeepSeek 流式返回，带 <code>[emotion:xxx]</code> 情绪标签与译文块。</li>
+            <li><strong>合成</strong>：按句子切分送 GPT-SoVITS，「边说边合成」，首句语音不等整段回复。</li>
+            <li><strong>呈现</strong>：前端逐字显示 + 顺序播放语音 + 驱动口型 / 表情 / 情绪光晕。</li>
+            <li><strong>记忆</strong>：对话落库，后台线程增量提炼长期记忆。</li>
+          </ol>
+
+          <!-- 核心功能 -->
+          <h4 class="block-title">核心功能</h4>
           <ul class="feature-list">
-            <li><strong>Live2D 桌宠</strong>：透明无边框窗口、鼠标穿透不挡操作，表情动作随情绪联动</li>
-            <li><strong>角色语音</strong>：为真红单独训练的 GPT-SoVITS 日语语音，回复带原文 + 译文</li>
-            <li><strong>有记忆</strong>：短期历史存 SQLite，长期语义记忆用 LanceDB 向量检索，入库有严格规范</li>
+            <li><strong>Live2D 桌宠</strong>：透明无边框、鼠标穿透不挡操作，长按拖动、点击互动、贴边吸附、托盘常驻</li>
+            <li><strong>语音对话</strong>：GPT-SoVITS 日语音色，SSE 流式「边说边合成」；sherpa-onnx 本地中文识别，按住说话</li>
+            <li><strong>角色切换</strong>：角色包即插即用，切换时热切换语音权重（SoVITS → GPT → 参考音频）并 probe 验证</li>
+            <li><strong>有性格</strong>：结构化人设 + few-shot + 知识库 + 情绪→动作/表情/语气联动，语言与神态自洽</li>
+            <li><strong>有记忆</strong>：三层记忆（角色知识 / 短期对话 / 长期事实与画像），跨会话记得你</li>
             <li><strong>本地运行</strong>：一键启动（GPT-SoVITS + Electron），数据不出本机</li>
           </ul>
+
+          <!-- 性格还原 -->
+          <h4 class="block-title">人物性格还原</h4>
+          <p class="block-note">
+            性格不是一句「你是一个温柔的女孩」——而是「结构化人设 → Prompt 编译 → 语言 / 动作 / 表情 / 语气 / 音色」五维自洽。
+          </p>
+          <div class="detail-grid">
+            <div class="detail-card">
+              <h5>结构化人设</h5>
+              <p>config.json 把人格拆成可填空字段：心理画像（核心欲望 / 深层恐惧 / 道德底线）、认知模式、语言风格（自称 / 口头禅 / 句尾词 / 禁忌词）。</p>
+            </div>
+            <div class="detail-card">
+              <h5>Prompt 编译</h5>
+              <p>字段逐条编译成结构化 system prompt，分「角色简介 / 心理画像 / 认知模式 / 语言风格 / 回复规范 / 知识边界」。</p>
+            </div>
+            <div class="detail-card">
+              <h5>few-shot 示例</h5>
+              <p>knowledge.json 内嵌示例对话，直接注入消息列表，让模型模仿角色的具体口吻与语气。</p>
+            </div>
+            <div class="detail-card">
+              <h5>角色知识库</h5>
+              <p>生平 / 世界观向量化入 LanceDB，按语义检索注入，让角色「知道自己的故事」而不编造剧情。</p>
+            </div>
+            <div class="detail-card">
+              <h5>情绪联动</h5>
+              <p><code>[emotion:xxx]</code> 标签 → Live2D 动作 / 表情 + 语速 / 音调，流式首包即触发；如「寂寞」= 低头 + 泪眼 + 语速 0.8。</p>
+            </div>
+            <div class="detail-card">
+              <h5>原文 + 译文</h5>
+              <p>始终以日语回复（保证语音效果），附 <code>[translation:]</code> 中文译文；译文 / 原文 / 双语三模式展示。</p>
+            </div>
+            <div class="detail-card">
+              <h5>音色还原</h5>
+              <p>参考音频 + prompt_text + 双权重（GPT T2S + SoVITS），切换角色时热切换并 probe 验证音色一致。</p>
+            </div>
+            <div class="detail-card">
+              <h5>长度自适应</h5>
+              <p>按用户输入类型 / 长度动态调整回复档位：问候 12 字内，长消息 80 字内，避免「问候也长篇大论」。</p>
+            </div>
+          </div>
+
+          <!-- 记忆系统 -->
+          <h4 class="block-title">记忆系统</h4>
+          <p class="block-note">
+            三层记忆 + 严格的提炼流水线 + 知识边界门控，让角色「记得你」却不胡编、不污染。
+          </p>
+          <div class="layer-list">
+            <div class="layer">
+              <span class="layer-num">1</span>
+              <div><h5>角色固定知识库</h5><p>LanceDB knowledge_&lt;id&gt; —— 角色「知道自己的故事」（世界观 / 剧情）。</p></div>
+            </div>
+            <div class="layer">
+              <span class="layer-num">2</span>
+              <div><h5>短期对话</h5><p>SQLite chat_history —— 最近几轮上下文；治理：每会话 100 条 / 总量 1000 条。</p></div>
+            </div>
+            <div class="layer">
+              <span class="layer-num">3</span>
+              <div><h5>长期记忆</h5><p>LanceDB user_facts（向量事实）+ SQLite user_profile（画像）—— 关于「你」的稳定信息。</p></div>
+            </div>
+          </div>
+
+          <h5 class="sub-title">长期记忆提炼流水线</h5>
+          <ol class="flow-list">
+            <li><strong>触发</strong>：检测自我披露 / 指令偏好信号（「我叫…」「以后要…」），排除寒暄。</li>
+            <li><strong>节流 + 增量</strong>：同用户 60s 间隔；只提炼游标后新消息，失败不推进、下次重试。</li>
+            <li><strong>LLM 提炼</strong>：输出结构化 JSON（类型 / 键 / 值 / 主语 / 证据），失败自动重试一次。</li>
+            <li><strong>校验</strong>：画像键白名单、过滤推测 / 情境措辞、主语守卫（防止「对 AI 的称呼」被写成「你的属性」）。</li>
+            <li><strong>去重</strong>：精确去重 + 向量相似度去重（阈值 0.85），拦截近义变体。</li>
+          </ol>
+
+          <h5 class="sub-title">检索与知识边界</h5>
+          <ul class="feature-list">
+            <li><strong>分级注入</strong>：指令（必须遵守）→ 偏好（尽量满足）→ 画像 → 事实，按相关性分层注入 prompt</li>
+            <li><strong>门控</strong>：事实 top-1 相似度低于阈值且属事实性提问时，让角色坦诚「这个我还没记住」，绝不猜测编造</li>
+            <li><strong>治理</strong>：LRU 淘汰（200 条）、TTL 过期（30 天）、画像同义键合并、提炼审计日志</li>
+          </ul>
+
           <div class="tag-list">
             <span class="tag">Electron 43</span>
             <span class="tag">Pixi.js 7 + Live2D</span>
@@ -176,6 +288,7 @@
             <span class="tag">GPT-SoVITS</span>
             <span class="tag">sherpa-onnx</span>
             <span class="tag">SQLite + LanceDB</span>
+            <span class="tag">sentence-transformers</span>
           </div>
           <div class="demo-section">
             <h4 class="demo-title">功能演示</h4>
